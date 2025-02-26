@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Task } from "@/lib/types";
 import { format } from "date-fns";
-import { Check, Clock } from "lucide-react";
+import { Check, Clock, GripVertical } from "lucide-react";
 
 interface TaskCardProps {
   task: Task;
@@ -10,11 +10,14 @@ interface TaskCardProps {
 }
 
 export function TaskCard({ task, onComplete }: TaskCardProps) {
+  const isOverdue = new Date(task.dueDate) < new Date() && !task.completed;
+
   return (
-    <Card className="glass-card p-4 mb-4 animate-slide-in transition-all duration-500 group">
+    <Card className={`glass-card p-4 mb-4 animate-slide-in transition-all duration-500 group ${isOverdue ? 'border-red-500/50' : ''}`}>
       <div className="flex items-start justify-between relative z-10">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
+            <GripVertical className="w-5 h-5 text-gray-500 cursor-move" />
             <span className={`inline-block px-2 py-1 rounded-full text-xs task-priority-${task.priority} rainbow-border transition-all duration-300 group-hover:scale-110`}>
               {task.priority}
             </span>
@@ -26,9 +29,10 @@ export function TaskCard({ task, onComplete }: TaskCardProps) {
             {task.description}
           </p>
           <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Clock className="w-4 h-4 transition-transform duration-300 group-hover:scale-110" />
-            <span className="transition-colors duration-300 group-hover:text-gray-400">
+            <Clock className={`w-4 h-4 transition-transform duration-300 group-hover:scale-110 ${isOverdue ? 'text-red-500' : ''}`} />
+            <span className={`transition-colors duration-300 group-hover:text-gray-400 ${isOverdue ? 'text-red-500' : ''}`}>
               {format(new Date(task.dueDate), "PPP")}
+              {isOverdue && " (Overdue)"}
             </span>
           </div>
         </div>
