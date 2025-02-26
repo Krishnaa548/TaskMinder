@@ -47,57 +47,60 @@ export function CreateTaskDialog({ onCreateTask }: CreateTaskDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className="gap-2 rainbow-border bg-black/50 hover:bg-black/70 transition-all duration-300">
           <PlusCircle className="w-5 h-5" />
           Add Task
         </Button>
       </DialogTrigger>
       <DialogContent className="glass-card">
         <DialogHeader>
-          <DialogTitle>Create New Task</DialogTitle>
+          <DialogTitle className="rainbow-text">Create New Task</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title" className="text-white/90">Title</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
+              className="bg-white/10 border-white/20 text-white"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description" className="text-white/90">Description</Label>
             <Input
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="bg-white/10 border-white/20 text-white"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="dueDate">Due Date</Label>
+            <Label htmlFor="dueDate" className="text-white/90">Due Date</Label>
             <Input
               id="dueDate"
               type="datetime-local"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               required
+              className="bg-white/10 border-white/20 text-white"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="priority">Priority</Label>
+            <Label htmlFor="priority" className="text-white/90">Priority</Label>
             <select
               id="priority"
               value={priority}
               onChange={(e) => setPriority(e.target.value as TaskPriority)}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 rounded bg-white/10 border border-white/20 text-white"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full rainbow-border bg-black/50 hover:bg-black/70 transition-all duration-300">
             Create Task
           </Button>
         </form>
