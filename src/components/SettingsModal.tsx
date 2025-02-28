@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -70,13 +69,18 @@ export function SettingsModal({ preferences, onSavePreferences }: SettingsModalP
     childKey: string,
     value: any
   ) => {
-    setLocalPreferences(prev => ({
-      ...prev,
-      [parentKey]: {
-        ...prev[parentKey],
-        [childKey]: value,
-      },
-    }));
+    setLocalPreferences(prev => {
+      // Create a properly typed copy of the nested object
+      const parentObject = {...prev[parentKey] as object};
+      
+      return {
+        ...prev,
+        [parentKey]: {
+          ...parentObject,
+          [childKey]: value,
+        },
+      };
+    });
   };
 
   return (

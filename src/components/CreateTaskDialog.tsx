@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TaskPriority, TaskTag } from "@/lib/types";
 import { useState } from "react";
-import { PlusCircle, Wand2 } from "lucide-react";
+import { PlusCircle, Wand2, Tag } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 

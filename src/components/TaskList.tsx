@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Task, TaskAnalytics, TaskTag, UserPreferences, ViewMode } from "@/lib/types";
+import { Task, TaskAnalytics, TaskTag, UserPreferences, ViewMode, TimeEntry } from "@/lib/types";
 import { TaskCard } from "./TaskCard";
 import { CreateTaskDialog } from "./CreateTaskDialog";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
