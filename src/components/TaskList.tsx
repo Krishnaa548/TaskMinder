@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Task, TaskAnalytics, TaskTag, UserPreferences, ViewMode, TimeEntry } from "@/lib/types";
+import { Task, TaskAnalytics, TaskTag, UserPreferences, ViewMode } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { PomodoroTimer } from "./PomodoroTimer";
 import { usePreferenceStore } from "@/stores/preferenceStore";
@@ -9,6 +9,33 @@ import { TaskAnalyticsDashboard } from "./tasks/TaskAnalyticsDashboard";
 import { TasksViewSelector } from "./tasks/TasksViewSelector";
 import { EmptyTaskList } from "./tasks/EmptyTaskList";
 import { startTimeTracking, stopTimeTracking, calculateTaskAnalytics } from "@/utils/timeTrackingUtils";
+
+// Define default user preferences outside the component to avoid using before declaration
+const defaultUserPreferences: UserPreferences = {
+  theme: "dark",
+  defaultView: "list",
+  defaultTaskDuration: 30,
+  defaultPriority: "medium",
+  showCompletedTasks: true,
+  enableNotifications: true,
+  notificationChannels: ["in-app"], // Fixed: Changed from readonly to regular array
+  enableTimeTracking: true,
+  enableCollaboration: false,
+  enableSmartSuggestions: true,
+  enableNaturalLanguageInput: true,
+  integrations: {
+    googleCalendar: false,
+    slack: false,
+    microsoftTeams: false,
+  },
+  focusMode: {
+    enabled: false,
+    hideNotifications: true,
+    hideNavigation: false,
+    pomodoroDuration: 25,
+    breakDuration: 5,
+  },
+};
 
 export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -24,33 +51,6 @@ export function TaskList() {
   const [focusModeActive, setFocusModeActive] = useState(false);
   const { toast } = useToast();
   const preferenceStore = usePreferenceStore();
-
-  // Import default user preferences
-  const defaultUserPreferences = {
-    theme: "dark" as const,
-    defaultView: "list" as const,
-    defaultTaskDuration: 30,
-    defaultPriority: "medium" as const,
-    showCompletedTasks: true,
-    enableNotifications: true,
-    notificationChannels: ["in-app"] as const,
-    enableTimeTracking: true,
-    enableCollaboration: false,
-    enableSmartSuggestions: true,
-    enableNaturalLanguageInput: true,
-    integrations: {
-      googleCalendar: false,
-      slack: false,
-      microsoftTeams: false,
-    },
-    focusMode: {
-      enabled: false,
-      hideNotifications: true,
-      hideNavigation: false,
-      pomodoroDuration: 25,
-      breakDuration: 5,
-    },
-  };
 
   // Initialize user preferences
   useEffect(() => {
