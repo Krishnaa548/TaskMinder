@@ -12,6 +12,8 @@ import { GoogleCalendarIntegration } from "./GoogleCalendarIntegration";
 import { SettingsModal, defaultUserPreferences } from "./SettingsModal";
 import { Calendar, KanbanSquare, List, Clock, Zap, Tag } from "lucide-react";
 import { Button } from "./ui/button";
+import { PomodoroTimer } from "./PomodoroTimer";
+import { usePreferenceStore } from "@/stores/preferenceStore";
 
 export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -26,6 +28,7 @@ export function TaskList() {
   const [currentTimeTracking, setCurrentTimeTracking] = useState<string | null>(null);
   const [focusModeActive, setFocusModeActive] = useState(false);
   const { toast } = useToast();
+  const preferenceStore = usePreferenceStore();
 
   // Initialize user preferences
   useEffect(() => {
@@ -43,6 +46,9 @@ export function TaskList() {
     
     // Apply new preferences
     setActiveView(newPreferences.defaultView);
+    
+    // Sync with preference store
+    preferenceStore.updatePreferences(newPreferences);
   };
 
   // Create a new task
@@ -536,6 +542,10 @@ export function TaskList() {
 
   return (
     <div className={`space-y-8 ${focusModeActive ? 'focus-mode' : ''}`}>
+      {focusModeActive && preferences.focusMode.enabled && (
+        <PomodoroTimer />
+      )}
+      
       {!focusModeActive && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

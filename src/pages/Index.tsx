@@ -1,6 +1,7 @@
 
 import { TaskList } from "@/components/TaskList";
 import { useEffect, useRef } from "react";
+import { BackgroundEffects } from "@/components/BackgroundEffects";
 
 const Index = () => {
   const cursorRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black to-gray-900 relative overflow-hidden">
+      <BackgroundEffects />
       <div ref={cursorRef} className="cursor-glow" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(50,50,50,0.2),transparent_100%)]" />
       <div className="absolute inset-0 opacity-30">

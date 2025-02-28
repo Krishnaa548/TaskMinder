@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +14,7 @@ import { Settings, Save } from "lucide-react";
 import { NotificationChannel, TaskPriority, ThemeMode, UserPreferences, ViewMode } from "@/lib/types";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { usePreferenceStore } from "@/stores/preferenceStore";
 
 // Default user preferences
 export const defaultUserPreferences: UserPreferences = {
@@ -49,6 +51,7 @@ interface SettingsModalProps {
 export function SettingsModal({ preferences, onSavePreferences }: SettingsModalProps) {
   const [open, setOpen] = useState(false);
   const [localPreferences, setLocalPreferences] = useState<UserPreferences>(preferences);
+  const { backgroundTheme, setBackgroundTheme } = usePreferenceStore();
   const { toast } = useToast();
 
   const handleSave = () => {
@@ -126,6 +129,21 @@ export function SettingsModal({ preferences, onSavePreferences }: SettingsModalP
                 <option value="list">List</option>
                 <option value="kanban">Kanban Board</option>
                 <option value="calendar">Calendar</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="backgroundTheme">Background Effects</Label>
+              <select
+                id="backgroundTheme"
+                value={backgroundTheme}
+                onChange={(e) => setBackgroundTheme(e.target.value as 'rainbow' | 'particles' | 'waves' | 'minimal')}
+                className="w-full p-2 rounded bg-white/10 border border-white/20 text-white"
+              >
+                <option value="rainbow">Rainbow Gradient</option>
+                <option value="particles">Particles</option>
+                <option value="waves">Ocean Waves</option>
+                <option value="minimal">Minimal</option>
               </select>
             </div>
 
