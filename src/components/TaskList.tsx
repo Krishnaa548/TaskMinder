@@ -6,6 +6,7 @@ import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { useToast } from "@/hooks/use-toast";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { GoogleCalendarIntegration } from "./GoogleCalendarIntegration";
 
 export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -91,17 +92,22 @@ export function TaskList() {
         </div>
       </div>
 
-      <div className="glass-card p-4 mb-8">
-        <h3 className="text-lg font-semibold mb-4">Task Priority Distribution</h3>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="tasks" fill="#6366f1" />
-            </BarChart>
-          </ResponsiveContainer>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="md:col-span-2 glass-card p-4">
+          <h3 className="text-lg font-semibold mb-4">Task Priority Distribution</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="tasks" fill="#6366f1" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="md:col-span-1">
+          <GoogleCalendarIntegration tasks={tasks} />
         </div>
       </div>
 
