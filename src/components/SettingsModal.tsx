@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -73,7 +72,6 @@ export function SettingsModal({ preferences, onSavePreferences }: SettingsModalP
     value: any
   ) => {
     setLocalPreferences(prev => {
-      // Create a properly typed copy of the nested object
       const parentObject = {...prev[parentKey] as object};
       
       return {
@@ -83,6 +81,14 @@ export function SettingsModal({ preferences, onSavePreferences }: SettingsModalP
           [childKey]: value,
         },
       };
+    });
+  };
+
+  const updateOAuthSettings = (clientId: string) => {
+    localStorage.setItem('GOOGLE_CLIENT_ID', clientId);
+    toast({
+      title: "OAuth Settings Updated",
+      description: "Google OAuth client ID has been updated.",
     });
   };
 
@@ -398,6 +404,27 @@ export function SettingsModal({ preferences, onSavePreferences }: SettingsModalP
                   className="bg-white/10 border-white/20 text-white"
                 />
               </div>
+            </div>
+          </div>
+          
+          {/* OAuth Settings */}
+          <div className="space-y-4 md:col-span-2">
+            <h3 className="text-lg font-semibold">OAuth Settings</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="google-client-id">Google OAuth Client ID</Label>
+              <Input
+                id="google-client-id"
+                type="text"
+                placeholder="Enter your Google OAuth Client ID"
+                defaultValue={localStorage.getItem('GOOGLE_CLIENT_ID') || ''}
+                onChange={(e) => updateOAuthSettings(e.target.value)}
+                className="bg-white/10 border-white/20 text-white"
+              />
+              <p className="text-xs text-gray-400">
+                Get a client ID from the <a href="https://console.cloud.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">Google Cloud Console</a>. 
+                Required for Google Calendar integration.
+              </p>
             </div>
           </div>
         </div>

@@ -8,12 +8,14 @@ interface TaskAnalyticsDashboardProps {
   analytics: TaskAnalytics;
   chartData: Array<{ name: string; tasks: number }>;
   tasks: Task[];
+  onIntegrationUpdate?: (integrationName: string, status: boolean) => void;
 }
 
 export function TaskAnalyticsDashboard({
   analytics,
   chartData,
-  tasks
+  tasks,
+  onIntegrationUpdate
 }: TaskAnalyticsDashboardProps) {
   return (
     <>

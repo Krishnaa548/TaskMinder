@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Task, TaskAnalytics, TaskTag, UserPreferences, ViewMode } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
@@ -9,8 +8,8 @@ import { TaskAnalyticsDashboard } from "./tasks/TaskAnalyticsDashboard";
 import { TasksViewSelector } from "./tasks/TasksViewSelector";
 import { EmptyTaskList } from "./tasks/EmptyTaskList";
 import { startTimeTracking, stopTimeTracking, calculateTaskAnalytics } from "@/utils/timeTrackingUtils";
+import { GoogleCalendarIntegration } from "./GoogleCalendarIntegration";
 
-// Define default user preferences outside the component to avoid using before declaration
 const defaultUserPreferences: UserPreferences = {
   theme: "dark",
   defaultView: "list",
@@ -18,7 +17,7 @@ const defaultUserPreferences: UserPreferences = {
   defaultPriority: "medium",
   showCompletedTasks: true,
   enableNotifications: true,
-  notificationChannels: ["in-app"], // Fixed: Changed from readonly to regular array
+  notificationChannels: ["in-app"],
   enableTimeTracking: true,
   enableCollaboration: false,
   enableSmartSuggestions: true,
@@ -52,7 +51,6 @@ export function TaskList() {
   const { toast } = useToast();
   const preferenceStore = usePreferenceStore();
 
-  // Initialize user preferences
   useEffect(() => {
     const savedPreferences = localStorage.getItem("userPreferences");
     if (savedPreferences) {
@@ -61,19 +59,15 @@ export function TaskList() {
     }
   }, []);
 
-  // Save preferences to localStorage
   const handleSavePreferences = (newPreferences: UserPreferences) => {
     setPreferences(newPreferences);
     localStorage.setItem("userPreferences", JSON.stringify(newPreferences));
     
-    // Apply new preferences
     setActiveView(newPreferences.defaultView);
     
-    // Sync with preference store
     preferenceStore.updatePreferences(newPreferences);
   };
 
-  // Create a new task
   const handleCreateTask = (newTask: Omit<Task, "id" | "completed" | "status" | "createdAt" | "updatedAt">) => {
     const now = new Date();
     const task: Task = {
@@ -98,7 +92,6 @@ export function TaskList() {
     });
   };
 
-  // Toggle task completion
   const handleCompleteTask = (id: string) => {
     setTasks((prev) =>
       prev.map((task) => {
@@ -116,7 +109,6 @@ export function TaskList() {
     );
   };
 
-  // Update task status
   const handleUpdateTaskStatus = (id: string, status: "pending" | "in-progress" | "completed" | "overdue") => {
     setTasks((prev) =>
       prev.map((task) => {
@@ -133,12 +125,10 @@ export function TaskList() {
     );
   };
 
-  // Time tracking
   const toggleTimeTracking = (taskId: string) => {
     if (!preferences.enableTimeTracking) return;
     
     if (currentTimeTracking === taskId) {
-      // Stop tracking
       setTasks(prevTasks => stopTimeTracking(prevTasks, taskId));
       setCurrentTimeTracking(null);
       toast({
@@ -146,8 +136,6 @@ export function TaskList() {
         description: "Time tracking has been stopped for this task.",
       });
     } else {
-      // Start tracking
-      // If there's another task being tracked, stop it first
       if (currentTimeTracking) {
         setTasks(prevTasks => stopTimeTracking(prevTasks, currentTimeTracking));
       }
@@ -161,7 +149,6 @@ export function TaskList() {
     }
   };
 
-  // Toggle focus mode
   const toggleFocusMode = () => {
     setFocusModeActive(!focusModeActive);
     toast({
@@ -172,7 +159,6 @@ export function TaskList() {
     });
   };
 
-  // Handle drag and drop
   const onDragEnd = (result: any) => {
     if (!result.destination) return;
 
@@ -186,17 +172,14 @@ export function TaskList() {
       const destinationStatus = result.destination.droppableId;
       
       if (sourceStatus === destinationStatus) {
-        // Reordering within the same column
         const columnTasks = tasks.filter(t => t.status === sourceStatus);
         const orderedTasks = Array.from(columnTasks);
         const [movedTask] = orderedTasks.splice(result.source.index, 1);
         orderedTasks.splice(result.destination.index, 0, movedTask);
         
-        // Merge the ordered tasks with the rest of the tasks
         const updatedTasks = tasks.filter(t => t.status !== sourceStatus);
         setTasks([...updatedTasks, ...orderedTasks]);
       } else {
-        // Moving between columns
         setTasks(prev => 
           prev.map(task => {
             if (task.id === result.draggableId) {
@@ -214,7 +197,32 @@ export function TaskList() {
     }
   };
 
-  // Calculate analytics data
+  const handleIntegrationUpdate = (integrationName: string, status: boolean) => {
+    if (integrationName === 'googleCalendar') {
+      setPreferences(prev => ({
+        ...prev,
+        integrations: {
+          ...prev.integrations,
+          googleCalendar: status
+        }
+      }));
+      
+      const savedPrefs = localStorage.getItem("userPreferences");
+      if (savedPrefs) {
+        const parsedPrefs = JSON.parse(savedPrefs);
+        parsedPrefs.integrations.googleCalendar = status;
+        localStorage.setItem("userPreferences", JSON.stringify(parsedPrefs));
+      }
+      
+      preferenceStore.updatePreferences({
+        integrations: {
+          ...preferences.integrations,
+          googleCalendar: status
+        }
+      });
+    }
+  };
+
   const analytics: TaskAnalytics = calculateTaskAnalytics(tasks);
 
   const chartData = [
@@ -223,7 +231,6 @@ export function TaskList() {
     { name: 'Low', tasks: analytics.priorityDistribution.low },
   ];
 
-  // Filter tasks based on user preferences
   const filteredTasks = tasks.filter(task => {
     if (!preferences.showCompletedTasks && task.completed) {
       return false;
@@ -231,7 +238,6 @@ export function TaskList() {
     return true;
   });
 
-  // Group tasks by status for Kanban view
   const pendingTasks = filteredTasks.filter(t => t.status === "pending");
   const inProgressTasks = filteredTasks.filter(t => t.status === "in-progress");
   const completedTasks = filteredTasks.filter(t => t.status === "completed");
@@ -248,6 +254,7 @@ export function TaskList() {
           analytics={analytics} 
           chartData={chartData}
           tasks={tasks}
+          onIntegrationUpdate={handleIntegrationUpdate}
         />
       )}
 

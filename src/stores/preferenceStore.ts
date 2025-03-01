@@ -5,9 +5,14 @@ import { ThemeMode, UserPreferences } from '@/lib/types';
 
 interface PreferenceState extends UserPreferences {
   backgroundTheme: 'rainbow' | 'particles' | 'waves' | 'minimal';
+  googleIntegration: {
+    isConnected: boolean;
+    email: string | null;
+  };
   setTheme: (theme: ThemeMode) => void;
   setDefaultView: (view: UserPreferences['defaultView']) => void;
   setBackgroundTheme: (theme: 'rainbow' | 'particles' | 'waves' | 'minimal') => void;
+  setGoogleIntegration: (status: boolean, email: string | null) => void;
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
 }
 
@@ -26,6 +31,10 @@ export const usePreferenceStore = create<PreferenceState>()(
       enableSmartSuggestions: true,
       enableNaturalLanguageInput: true,
       backgroundTheme: 'rainbow',
+      googleIntegration: {
+        isConnected: false,
+        email: null,
+      },
       integrations: {
         googleCalendar: false,
         slack: false,
@@ -41,6 +50,8 @@ export const usePreferenceStore = create<PreferenceState>()(
       setTheme: (theme) => set({ theme }),
       setDefaultView: (defaultView) => set({ defaultView }),
       setBackgroundTheme: (backgroundTheme) => set({ backgroundTheme }),
+      setGoogleIntegration: (isConnected, email) => 
+        set({ googleIntegration: { isConnected, email } }),
       updatePreferences: (preferences) => set((state) => ({ ...state, ...preferences })),
     }),
     {
