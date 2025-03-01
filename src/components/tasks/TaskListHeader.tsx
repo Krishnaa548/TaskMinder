@@ -40,7 +40,7 @@ export function TaskListHeader({
             variant="outline" 
             size="sm"
             onClick={toggleFocusMode}
-            className="gap-1"
+            className="gap-1 hover:bg-white/10"
           >
             <Zap className="w-4 h-4" />
             {focusModeActive ? "Exit Focus Mode" : "Focus Mode"}

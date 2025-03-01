@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -107,33 +108,72 @@ export function CreateTaskDialog({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const newTask = {
-      title,
-      description,
-      dueDate: new Date(dueDate),
-      priority,
-      tags: selectedTags.length > 0 ? selectedTags : undefined,
-      recurrence: isRecurring ? {
-        frequency: recurrenceFrequency,
-        interval: recurrenceInterval,
-      } : undefined,
-    };
+    if (!title.trim()) {
+      toast({
+        title: "Error",
+        description: "Task title is required",
+        variant: "destructive"
+      });
+      return;
+    }
     
-    onCreateTask(newTask);
-    setOpen(false);
+    if (!dueDate) {
+      toast({
+        title: "Error",
+        description: "Due date is required",
+        variant: "destructive"
+      });
+      return;
+    }
     
-    // Reset form
-    setTitle("");
-    setDescription("");
-    setDueDate("");
-    setPriority(defaultPriority);
-    setSelectedTags([]);
-    setNaturalLanguageInput("");
-    setUseNaturalLanguage(false);
-    setIsRecurring(false);
-    setRecurrenceFrequency("weekly");
-    setRecurrenceInterval(1);
+    try {
+      const newTask = {
+        title,
+        description,
+        dueDate: new Date(dueDate),
+        priority,
+        tags: selectedTags.length > 0 ? selectedTags : undefined,
+        recurrence: isRecurring ? {
+          frequency: recurrenceFrequency,
+          interval: recurrenceInterval,
+        } : undefined,
+      };
+      
+      onCreateTask(newTask);
+      setOpen(false);
+      
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setDueDate("");
+      setPriority(defaultPriority);
+      setSelectedTags([]);
+      setNaturalLanguageInput("");
+      setUseNaturalLanguage(false);
+      setIsRecurring(false);
+      setRecurrenceFrequency("weekly");
+      setRecurrenceInterval(1);
+      
+      toast({
+        title: "Task Created",
+        description: "Your task has been created successfully",
+      });
+    } catch (error) {
+      console.error("Error creating task:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create task. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
+
+  // Set today as the default date when the component mounts
+  useState(() => {
+    const today = new Date();
+    today.setHours(today.getHours() + 1, 0, 0, 0); // Set to next hour
+    setDueDate(today.toISOString().slice(0, 16));
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -146,6 +186,9 @@ export function CreateTaskDialog({
       <DialogContent className="glass-card">
         <DialogHeader>
           <DialogTitle className="rainbow-text">Create New Task</DialogTitle>
+          <DialogDescription className="text-gray-400">
+            Fill in the details below to create a new task
+          </DialogDescription>
         </DialogHeader>
         
         {enableNaturalLanguage && (
@@ -174,7 +217,7 @@ export function CreateTaskDialog({
                     type="button" 
                     variant="outline" 
                     onClick={parseNaturalLanguage}
-                    className="gap-1"
+                    className="gap-1 hover:bg-white/10"
                   >
                     <Wand2 className="w-4 h-4" />
                     Parse
@@ -295,7 +338,7 @@ export function CreateTaskDialog({
                       type="number"
                       min="1"
                       value={recurrenceInterval}
-                      onChange={(e) => setRecurrenceInterval(parseInt(e.target.value))}
+                      onChange={(e) => setRecurrenceInterval(parseInt(e.target.value) || 1)}
                       className="bg-white/10 border-white/20 text-white text-sm"
                     />
                     <span className="ml-2 text-white/90 text-sm">
