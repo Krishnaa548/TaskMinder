@@ -194,6 +194,30 @@ body:has([role="dialog"][aria-modal="true"]) .cursor-glow {
   display: none;
 }
 
+body:has([role="dialog"][aria-modal="true"]) header {
+  transform: none !important;
+  transition: none !important;
+}
+
+.glass-card.max-h-[80vh] {
+  overflow-y: auto !important;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.glass-card.max-h-[80vh]::-webkit-scrollbar {
+  width: 6px;
+}
+
+.glass-card.max-h-[80vh]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.glass-card.max-h-[80vh]::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
 .rainbow-text {
   background-image: linear-gradient(
     45deg,
@@ -268,7 +292,6 @@ body:has([role="dialog"][aria-modal="true"]) .cursor-glow {
   @apply max-w-2xl mx-auto;
 }
 
-/* Enhanced hover effects for cards */
 .glass-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -278,7 +301,6 @@ body:has([role="dialog"][aria-modal="true"]) .cursor-glow {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
-/* Pomodoro timer styling */
 .pomodoro-timer {
   @apply text-center p-4;
 }
@@ -292,7 +314,6 @@ body:has([role="dialog"][aria-modal="true"]) .cursor-glow {
   @apply text-sm text-gray-400 uppercase tracking-wider;
 }
 
-/* Task highlight effect */
 .task-highlight {
   animation: fade-in-out 2s infinite;
 }
