@@ -177,12 +177,21 @@
   transform: translate(-50%, -50%) !important;
   z-index: 9999 !important;
   pointer-events: auto !important;
+  will-change: auto !important;
 }
 
 [role="dialog"] {
-  position: fixed;
-  z-index: 50;
+  position: fixed !important;
+  z-index: 50 !important;
   pointer-events: auto !important;
+  transform: translate(-50%, -50%) !important;
+  top: 50% !important;
+  left: 50% !important;
+  will-change: auto !important;
+}
+
+body:has([role="dialog"][aria-modal="true"]) .cursor-glow {
+  display: none;
 }
 
 .rainbow-text {

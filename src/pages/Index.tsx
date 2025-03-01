@@ -18,12 +18,12 @@ const Index = () => {
           cursor.style.top = e.clientY + "px";
         }
 
-        // Parallax effect for header - less movement to prevent interfering with overlays
-        if (headerRef.current) {
+        // Only apply parallax to header if no dialog is open
+        if (headerRef.current && !document.querySelector('[role="dialog"][aria-modal="true"]')) {
           const { clientX, clientY } = e;
           const { innerWidth, innerHeight } = window;
-          const moveX = (clientX - innerWidth / 2) / innerWidth * 10; // reduced from 20 to 10
-          const moveY = (clientY - innerHeight / 2) / innerHeight * 10; // reduced from 20 to 10
+          const moveX = (clientX - innerWidth / 2) / innerWidth * 5; // further reduced from 10 to 5
+          const moveY = (clientY - innerHeight / 2) / innerHeight * 5; // further reduced from 10 to 5
           headerRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
         }
       });
